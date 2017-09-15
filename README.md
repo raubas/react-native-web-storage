@@ -3,7 +3,7 @@ A synchronous local storage wrapper for both react-native(AsyncStorage) and brow
 
 ## Why?
 
-#### Problem: 
+#### Problem:
 React-Native localStorage is asynchronous and Browser synchronous. Therefore, creating one app for both platforms which uses localStorage needs unified API.
 
 #### Solution:
@@ -14,7 +14,7 @@ React-Native localStorage is asynchronous and Browser synchronous. Therefore, cr
 
 	npm install react-native-web-storage --save
 
-## Usage 
+## Usage
 
 - How to hydrate redux store with data from localStorage
 ```javascript
@@ -40,12 +40,38 @@ import { storage } from '@aurity/react-native-web-storage'
 storage.setItem(key, value)
 storage.removeItem(key)
 storage.getItem(key)
-storage.store() // returns all storage 
-storage.clear() // clears all storage 
-storage.getAllFromLocalStorage() // reads data from platfrom specific localStorage 
-storage.setToken(value) // sets oAuth token 
+storage.store() // returns all storage
+storage.clear() // clears all storage
+storage.getAllFromLocalStorage() // reads data from platfrom specific localStorage
+storage.setToken(value) // sets oAuth token
 storage.getToken(value) // gets oAuth token
 ```
+
+- How to handle storage and hydrate-store-wrapper in server env
+
+Add this to you webpack config for server builds of your app when using SSR
+
+```javascript
+new webpack.NormalModuleReplacementPlugin(
+	/\/storage\/storage$/,
+	(resource) => {
+		resource.request = resource.request.replace(/storage\/storage/, `storage/storage.mock`);
+	}
+),
+new webpack.NormalModuleReplacementPlugin(
+	/\/hydrate-store-wrapper$/,
+	(resource) => {
+		resource.request = resource.request.replace(/hydrate-store-wrapper/, `hydrate-store-wrapper.mock`);
+	}
+),
+new webpack.NormalModuleReplacementPlugin(
+	/\/hydrate-store-HOC$/,
+	(resource) => {
+		resource.request = resource.request.replace(/hydrate-store-HOC/, `hydrate-store-HOC.mock`);
+	}
+),
+```
+
 
 #### You are welcome to ask any question in the [issues](https://github.com/aurity/react-native-web-storage/issues) page.
 
@@ -54,6 +80,7 @@ storage.getToken(value) // gets oAuth token
 - [ ] add "length" support (web localStorage API)
 - [ ] add tests (cross-platform problems)
 - [ ] add support for not optimistic update for AsyncStorage
+- [ ] Fix hydrate-store-wrapper (i'm using the HOC)
 
 ### Changelog
 #### 0.0.1
