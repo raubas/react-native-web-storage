@@ -14,6 +14,7 @@ const storageService = {
   setItem,
   removeItem,
   getItem,
+  multiGet,
   store: storage.getAll,
   clear,
   setToken,
@@ -45,9 +46,10 @@ function flatMap(allData) {
 }
 
 function setItem(key, value) {
-  storage.set(key, value)
+  const valueToSet = JSON.stringify( eval(value) )
+  storage.set(key, valueToSet)
   AsyncStorage
-    .setItem(key, JSON.stringify(value))
+    .setItem(key, valueToSet)
     .then(handleSuccess)
     .catch(handleError)
 }
@@ -60,7 +62,14 @@ function removeItem(key) {
     .catch(handleError)
 }
 
-function getItem(key) { return storage.get(key) }
+function getItem(key) {
+  const value = storage.get(key)
+  return value ? JSON.parse(value) : value
+}
+
+function multiGet(keys = []){
+  return keys.map(key => getItem(key))
+}
 
 function setToken(value) {
   return setItem('token', value)

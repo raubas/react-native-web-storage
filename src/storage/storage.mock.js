@@ -6,7 +6,7 @@
  * Copyright © 2017 Aurity. All rights reserved.
  *
  */
-const namespace = 'appStore'
+const namespace = 'Artworks'
 initWithNamespace(namespace)
 
 /*
@@ -30,11 +30,7 @@ export default storageService
 
 function setItem(key, value) {
   const items = storageService.store()
-
-  items[key] = value
-  localStorage[namespace] = JSON.stringify(items)
-
-  return storageService
+  return items
 }
 
 function setToken(value) {
@@ -47,14 +43,12 @@ function getToken(value) {
 
 function removeItem(key) {
   const items = storageService.store()
-  delete items[key]
-  localStorage[namespace] = JSON.stringify(items)
-
   return storageService
 }
 
 function getItem(key) {
   const items = storageService.store()
+
   return items[key]
 }
 
@@ -64,22 +58,19 @@ function multiGet(keys = []){
 }
 
 function store() {
-  return JSON.parse(localStorage[namespace])
+  return {}
 }
 
 function clear() {
-  delete localStorage[namespace]
-  initWithNamespace(namespace)
-
-  return storageService
+  return {}
 }
 
 function initWithNamespace(nspace) {
-  if (typeof localStorage !== 'undefined') {
-    localStorage[nspace] = localStorage[nspace] ? localStorage[nspace] : '{}';
-  }
+  // if (typeof localStorage !== 'undefined') {
+  //   localStorage[nspace] = localStorage[nspace] ? localStorage[nspace] : '{}';
+  // }
 }
 
 function getAllFromLocalStorage() {
-  return Promise.resolve(JSON.parse(localStorage[namespace]))
+  return Promise.resolve({})
 }
